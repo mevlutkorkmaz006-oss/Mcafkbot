@@ -13,7 +13,7 @@ app.listen(PORT, () => {
   console.log(`Web sunucusu ${PORT} portunda dinleniyor.`);
 });
 
-// SUNUCU BİLGİLERİ (Buraları senin için hazırladım!)
+// SUNUCU BİLGİLERİ
 const SERVER_HOST = '163.5.201.9'; 
 const SERVER_PORT = 10124;              
 const BOT_NAME = 'AFK_Bot_Tunc';        
@@ -29,12 +29,13 @@ function startBot() {
   bot.on('spawn', () => {
     console.log('Bot başarıyla sunucuya girdi!');
     
-    // Anti-AFK: Her 2 saniyede bir eğilip (sneak) kalkar
-    let isSneaking = false;
+    // Sürekli eğili tutma (Hep sneak modunda kalır)
+    bot.setControlState('sneak', true);
+
+    // Anti-AFK: Sunucunun 'hareketsiz duruyor' diye kick atmaması için 15 sn'de bir hafifçe bakış açısını değiştirir
     setInterval(() => {
-      isSneaking = !isSneaking;
-      bot.setControlState('sneak', isSneaking);
-    }, 2000);
+      bot.look(bot.entity.yaw + 0.1, bot.entity.pitch, true);
+    }, 15000);
   });
 
   // Sunucudan düşerse veya kick yerse otomatik tekrar girer
